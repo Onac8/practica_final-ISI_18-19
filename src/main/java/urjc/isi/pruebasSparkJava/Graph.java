@@ -1,7 +1,5 @@
 package urjc.isi.pruebasSparkJava;
 
-import java.util.Arrays;
-
 /******************************************************************************
  *  Compilation:  javac Graph.java
  *  Execution:    java Graph < input.txt

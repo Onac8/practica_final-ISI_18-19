@@ -223,19 +223,16 @@ public class Main {
     /**
      * Comprueba si se han introducido nombres incorrectos/incompletos 
      * (p.e. 'Tom', en vez de 'Tom Cruise', o no coincidente como 'abcd').
-     * @param name para buscar y comparar
+     * @param name para buscar y comparar.
      * @return Nombres coincidentes con parte de los strings dados (p.e. devuelve todos los
-     * 'Tom' de la tabla, en el caso de haber introducido 'Tom' en vez de 'Tom Cruise'.
+     * 'Tom' de la tabla, en el caso de haber introducido 'Tom' en vez de 'Tom Cruise').
      * Devuelve string de 'no coincidencia' en caso de que no exista nada similar en la BD.
      */
     public static String nameChecker(Connection conn, String name){
-    	//por el momento no implementado. Necesitamos BD para Select.
-    	//dos opciones: introducir solo una palabra
-    	//introducir todo, aunque sea mal
     	String sql = "SELECT title FROM movies " + //consulta para nombre_pelis
-    			"WHERE title LIKE ?"; // + name + "%'";
+    			"WHERE title LIKE ?";
     	String sql2 = "SELECT primaryName FROM workers " + //consulta para nombre_actores
-    			"WHERE primaryName LIKE ?"; // + name + "%'";
+    			"WHERE primaryName LIKE ?";
     	
     	String result = new String();
     	try {
@@ -246,7 +243,7 @@ public class Main {
     	ResultSet rs = pstmt.executeQuery();
     	
     		if(rs.next()) { //pelis
-    			result += "<p>Múltiples coincidencias. Copia nombre exacto:</p>" +
+    			result += "<p>Múltiples coincidencias. Copia nombre exacto para cálculo de distancia:</p>" +
     					"<p>Películas coincidentes:</p><ul>";
     			do{
     				result += "<li>" + rs.getString(1) + "</li>"; 
@@ -255,7 +252,7 @@ public class Main {
     		}else {
     			ResultSet rs2 = pstmt2.executeQuery(); //ejecutamos aqui la segunda query, para no matar la primera
     			if (rs2.next()) { //actores
-    				result += "<p>Múltiples coincidencias. Copia nombre exacto:</p>" +
+    				result += "<p>Múltiples coincidencias. Copia nombre exacto para cálculo de distancia:</p>" +
     						"<p>Actores coincidentes:</p><ul>";
         			do{
         				result += "<li>" + rs2.getString(1) + "</li>"; 
@@ -277,10 +274,7 @@ public class Main {
     }
     
     
-    public static String nameMatch(String name1) {
-    	return "";
-    }
-    
+//MAIN---
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
     	// Establecemos el puerto del server con el método getHerokuAssignedPort()
     	port(getHerokuAssignedPort());
@@ -471,7 +465,7 @@ public class Main {
         
         post("/distance_show", (req, res) -> {
         	Graph graph = new Graph("Database/film_actors.txt", "/");
-    		//Graph graph = new Graph("data/other-data/moviesG.txt", "/");
+    		//Graph graph = new Graph("data/other-data/moviesG.txt", "/"); para antigüa tabla
     		String name1= req.queryParams("name1");
     		String name2 = req.queryParams("name2");
     		String result = doDistance(graph, name1, name2);    		
