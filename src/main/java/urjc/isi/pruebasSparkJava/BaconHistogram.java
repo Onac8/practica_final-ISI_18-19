@@ -1,3 +1,5 @@
+package urjc.isi.pruebasSparkJava;
+
 /******************************************************************************
  *  Compilation:  javac BaconHistogram.java
  *  Execution:    java BaconHistogram input.txt

@@ -1,3 +1,5 @@
+package urjc.isi.pruebasSparkJava;
+
 /******************************************************************************
  *  Compilation:  javac SmallWorld.java
  *  Execution:    java SmallWorld filename delimiter

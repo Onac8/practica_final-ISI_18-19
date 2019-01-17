@@ -1,3 +1,5 @@
+package urjc.isi.pruebasSparkJava;
+
 /******************************************************************************
  *  Compilation:  javac StdOut.java
  *  Execution:    java StdOut

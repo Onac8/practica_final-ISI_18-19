@@ -1,3 +1,5 @@
+package urjc.isi.pruebasSparkJava;
+
 /******************************************************************************
  *  Compilation:  javac IndexGraph.java
  *  Dependencies: Graph.java In.java

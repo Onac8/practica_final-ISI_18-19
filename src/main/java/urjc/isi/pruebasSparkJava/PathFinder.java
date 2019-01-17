@@ -1,3 +1,5 @@
+package urjc.isi.pruebasSparkJava;
+
 /******************************************************************************
  *  Compilation:  javac PathFinder.java
  *  Execution:    java Pathfinder input.txt delimiter source
@@ -47,11 +49,11 @@ public class PathFinder {
         // all its neighbors, provided they haven't yet been visited
         while (!queue.isEmpty()) {
             String v = queue.dequeue();
-            for (String w : G.adjacentTo(v)) {
-                if (!dist.contains(w)) {
-                    queue.enqueue(w);
-                    dist.put(w, 1 + dist.get(v));
-                    prev.put(w, v);
+            for (String w : G.adjacentTo(v)) { //Va iterando sobre vertices del grafo, para key=v
+                if (!dist.contains(w)) { //si name 1 =! name 2 --> busco en otra peli
+                    queue.enqueue(w); //metemos w=vecino=peli (2a iter),buscar vecinos de peli
+                    dist.put(w, 1 + dist.get(v)); //para distancia numerica
+                    prev.put(w, v); //para la ruta
                 }
             }
         }

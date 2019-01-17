@@ -1,4 +1,7 @@
+package urjc.isi.pruebasSparkJava;
+
 /******************************************************************************
+
  *  Compilation:  javac StdIn.java
  *  Execution:    java StdIn   (interactive test of basic functionality)
  *  Dependencies: none
