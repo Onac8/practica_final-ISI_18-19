@@ -33,7 +33,6 @@ public class SmallWorld {
         return (double) sum / (G.V() * (G.V() - 1));
     }
 
-
     // Compute clustering coefficient.
     public static double clusteringCoefficient(Graph G) {
         double total = 0.0;

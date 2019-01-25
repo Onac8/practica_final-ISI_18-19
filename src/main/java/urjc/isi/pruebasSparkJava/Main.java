@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 import javax.servlet.MultipartConfigElement;
 import java.io.BufferedReader;
@@ -190,17 +191,63 @@ public class Main {
     public static String doDistance(Graph graph, String name1, String name2) {
     	if (graph.V() == 0) throw new NullPointerException("Main.doDistance");
     	
-    	String result = new String("");    	
+    	String result = new String("");
+    	ArrayList<String> allNames = new ArrayList<String>();
+    	String noMatch = "<p>Ninguna coincidencia. Error al introducir nombre," +
+    					"o no existe en nuestra BD</p><br>";
     	try {
 	    	if (name1.equals("") || name2.equals("")){ //caso de no introducir nada
 	    		throw new IllegalArgumentException("Main.doDistance");
 	    	}else if (!graph.hasVertex(name1) && !graph.hasVertex(name2)){ //caso 2 erroneos
-	    		result = "<p>Campo 1: </p>" + nameChecker(connection, name1);
-	    		result += "<p>Campo 2: </p>" + nameChecker(connection, name2); 
+	    		allNames = nameChecker(connection,name1);
+	    		result = "<p>Campo 1: </p>";
+	    		if (!allNames.isEmpty()) { 
+	    			result += "<p>Múltiples coincidencias. Copia nombre exacto para cálculo de distancia:</p><ul>"; 
+	    			for(String aux: allNames) {
+	    				result += "<li>" + aux + "</li>"; 
+	    			}
+	    			result += "</ul>";
+	    		}else {
+	    			result += noMatch;
+	    		}
+	    		
+	    		allNames.clear(); //limpiamos por si acaso
+	    		allNames = nameChecker(connection,name2);
+	    		result += "<p>Campo 2: </p>"; 
+	    		if (!allNames.isEmpty()) {
+	    			result += "<p>Múltiples coincidencias. Copia nombre exacto para cálculo de distancia:</p><ul>"; 
+	    			for(String aux: allNames) {
+	    				result += "<li>" + aux + "</li>"; 
+	    			}
+	    			result += "</ul>";
+	    		}else {
+	    			result += noMatch;
+	    		}
+	    		
 	    	}else if (!graph.hasVertex(name1)){ //no coincidencia nombre1
-				result = "<p>Campo 1: </p>" + nameChecker(connection, name1); //Control de nombres
+	    		allNames = nameChecker(connection,name1); //Control de nombres
+	    		if (!allNames.isEmpty()) {
+	    			result = "<p>Campo 1: </p>" + 
+	    					"<p>Múltiples coincidencias. Copia nombre exacto para cálculo de distancia:</p><ul>"; 
+	    			for(String aux: allNames) {
+	    				result += "<li>" + aux + "</li>"; 
+	    			}
+	    			result += "</ul>";
+	    		}else { //no coincidencia
+	    			result += noMatch;
+	    		}
 	    	}else if (!graph.hasVertex(name2)){ //no coincidencia nombre2
-	    		result = "<p>Campo 2: </p>" + nameChecker(connection, name2);
+	    		allNames = nameChecker(connection,name2);
+	    		if (!allNames.isEmpty()) {
+	    			result = "<p>Campo 2: </p>" + 
+	    					"<p>Múltiples coincidencias. Copia nombre exacto para cálculo de distancia:</p><ul>"; 
+	    			for(String aux: allNames) {
+	    				result += "<li>" + aux + "</li>"; 
+	    			}
+	    			result += "</ul>";
+	    		}else {
+	    			result += noMatch;
+	    		}
 			}else{
 				PathFinder pf = new PathFinder(graph, name1);
 				if (pf.hasPathTo(name2)) { //si tenemos ruta, procedemos	
@@ -224,68 +271,97 @@ public class Main {
      * Comprueba si se han introducido nombres incorrectos/incompletos 
      * (p.e. 'Tom', en vez de 'Tom Cruise', o no coincidente como 'abcd').
      * @param name para buscar y comparar.
-     * @return Nombres coincidentes con parte de los strings dados (p.e. devuelve todos los
-     * 'Tom' de la tabla, en el caso de haber introducido 'Tom' en vez de 'Tom Cruise').
-     * Devuelve string de 'no coincidencia' en caso de que no exista nada similar en la BD.
+     * @return ArrayList con nombres coincidentes con parte de los strings dados 
+     * (p.e. devuelve todos los 'Tom' de la tabla, en el caso de haber introducido 'Tom'
+     * en vez de 'Tom Cruise'). Devuelve ArrayList vacío en caso de no coincidencia.
      */
-    public static String nameChecker(Connection conn, String name){
+    public static ArrayList<String> nameChecker(Connection conn, String name){
     	String sql = "SELECT title FROM movies " + //consulta para nombre_pelis
     			"WHERE title LIKE ?";
     	String sql2 = "SELECT primaryName FROM workers " + //consulta para nombre_actores
     			"WHERE primaryName LIKE ?";
     	
-    	String result = new String();
+    	ArrayList<String> result = new ArrayList<String>();
     	try {
-    	PreparedStatement pstmt = conn.prepareStatement(sql);
-    	pstmt.setString(1, "%" + name + "%");
-    	PreparedStatement pstmt2 = conn.prepareStatement(sql2);
-		pstmt2.setString(1, "%" + name + "%");
-    	ResultSet rs = pstmt.executeQuery();
-    	
-    		if(rs.next()) { //pelis
-    			result += "<p>Múltiples coincidencias. Copia nombre exacto para cálculo de distancia:</p>" +
-    					"<p>Películas coincidentes:</p><ul>";
-    			do{
-    				result += "<li>" + rs.getString(1) + "</li>"; 
-    			}while(rs.next());
-    			result += "</ul>";
-    		}else {
-    			ResultSet rs2 = pstmt2.executeQuery(); //ejecutamos aqui la segunda query, para no matar la primera
-    			if (rs2.next()) { //actores
-    				result += "<p>Múltiples coincidencias. Copia nombre exacto para cálculo de distancia:</p>" +
-    						"<p>Actores coincidentes:</p><ul>";
-        			do{
-        				result += "<li>" + rs2.getString(1) + "</li>"; 
-        			}while(rs2.next()); 
-        			result += "</ul>";
-    			}else {
-    				result += "<p>Ninguna ruta disponible entre " +
-    						"ambos actores/peliculas. Error al introducir nombres," +
-    						"o no existen en nuestra BD</p>" + 
-    						"<br>";
-    			}
-    			
-    		}
+	    	PreparedStatement pstmt = conn.prepareStatement(sql);
+	    	pstmt.setString(1, "%" + name + "%");
+	    	PreparedStatement pstmt2 = conn.prepareStatement(sql2);
+			pstmt2.setString(1, "%" + name + "%");
+			
+	    	ResultSet rs = pstmt.executeQuery();
+	    	if(rs.next()) { //pelis
+	    		do{
+	    			result.add(rs.getString(1));
+	    		}while(rs.next());
+	    	}
+	    			
+	    	ResultSet rs2 = pstmt2.executeQuery(); //ejecutamos aqui la segunda query, para no matar la primera
+	    	if (rs2.next()) { //actores
+	        	do{
+	        		result.add(rs2.getString(1));
+	        	}while(rs2.next()); 
+	    	}
     	} catch (SQLException e) {
     		System.out.println(e.getMessage());
-    	}
-    		
+    	}	
     	return result;
     }
     
     
+    /**
+     * Devuelve los vecinos dado un name (nodo). Uso de IndexGraph.java.
+     * @param graph sobre el que hallar vecinos
+     * @param name sobre el que hallar vecinos
+     * @return String con sus vecinos, u otro string en caso de error o 'no vecinos'.
+     */
+    public static String doGraphFilter(Graph graph, String name) {
+    	if (graph.V() == 0) throw new NullPointerException("Main.doDistance");
+    	
+    	String result = new String("");
+    	ArrayList<String> allNames = new ArrayList<String>();
+    	String noMatch = "<p>Ninguna coincidencia. Error al introducir nombre," +
+    					"o no existe en nuestra BD</p><br>";
+    	try {
+	    	if (name.equals("")){ //caso de no introducir nada
+	    		throw new IllegalArgumentException("Main.doDistance");
+	    	}else if (!graph.hasVertex(name)){ //no coincidencia nombre
+	    		allNames = nameChecker(connection,name);
+	    		if (!allNames.isEmpty()) {
+	    			result =  "<p>Múltiples coincidencias. Copia nombre exacto en el formulario:</p><ul>"; 
+	    			for(String aux: allNames) {
+	    				result += "<li>" + aux + "</li>"; 
+	    			}
+	    			result += "</ul>";
+	    		}else { //no coincidencia
+	    			result += noMatch;
+	    		}
+			}else{
+		    	for (String w : graph.adjacentTo(name)){
+		    		result += "<li>" + w + "</li>";
+		        }
+			}
+    	}catch(IllegalArgumentException e) {
+    		result ="<p>ERROR. Ver 'uso'. Por favor, inténtalo de nuevo.</p>";
+    	}
+		return result;
+    }
+    
 //MAIN---
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException, URISyntaxException {
     	// Establecemos el puerto del server con el método getHerokuAssignedPort()
     	port(getHerokuAssignedPort());
 
     	// Connect to SQLite sample.db database
     	// connection will be reused by every query in this simplistic example
-    	connection = DriverManager.getConnection("jdbc:sqlite:Database/IMDb.db");
+    	//El constructor para acceder a la base de datos, en el futuro se debe descomentar. 
+    	//Comentar para probar en local
+    	Injector connector = new Injector("IMDb.db");
+    	
+    	Score score =new Score();
+    	Comment comment =new Comment();
 
     	// SQLite default is to auto-commit (1 transaction / statement execution)
     	// Set it to false to improve performance
-    	connection.setAutoCommit(false);
 
     	String home = "<html><body>" +
     		"<h1>Bienvenidos a la web de películas</h1>" +
@@ -313,9 +389,14 @@ public class Main {
     					"<button type='submit'>Add Films</button>" +
     				"</div>" +
     			"</form>" +
-    			"<a href='/filter'>Filtrado</a>" +
-    			"<br><br>" + 
-				"<a href= '/distance'>Distancia entre actores, películas, directores...<a/>" +
+    			"<a href='/filter'>Búsqueda de películas</a>" +
+    			"<br><br>" +
+    			"<p>Grafos:</p>" +
+    			"<ul>" + 
+					"<li><a href= '/distance'>Distancia entre actores y películas<a/></li>" +
+					"<li><a href= '/graph_info'>Información sobre el grafo<a/></li>" +
+					"<li><a href= '/graph_filter'>Uso de grafos para filtrado<a/></li>" +
+				"</ul>" + 
     		"</body></html>";
 
         // spark server
@@ -323,6 +404,9 @@ public class Main {
         get("/info", Main::infoGet);
         post("/info", Main::infoPost);
         get("/hello", Main::doWork);
+        post("/score",(req, res)-> score.postScore(req));
+        post("/comment",(req, res)-> comment.postComment(req));
+
 
         // In this case we use a Java 8 method reference to specify
         // the method to be called when a GET /:table/:film HTTP request
@@ -423,21 +507,30 @@ public class Main {
         	return result;	
         });
         
-        // Recurso /filter encargado de la funcionalidad del filtrado
-        get("/filter", (req, res) ->
-        	"<form action='/filter_film' method='post'>" +
-        		"<label for='film'>Película que desea buscar: </label>" + 
-        		"<input type='text' name='film' id='film'> " +
-        		"<input type='submit' value='Enviar'>" +
-    		"</form>"
-        );
+        // Recurso /filter encargado de la funcionalidad del filtrado de películas.
+        get("/filter", (req, res) -> Filter.showFilterMenu());
         
-        post("/filter_film", (req, res) -> {
-        	// Con el atributo queryParams accedemos al valor del parametro "film" del form
-        	return "Has buscado: " + req.queryParams("film");
-        });
+        // Recurso /filter_name encargado de mostrar la info de una película dado el nombre.
+        post("/filter_name", (req, res) -> Filter.showFilmByName());
         
+        // Recurso /filter_year encargado de mostrar todas las películas dado un año.
+        post("/filter_year", (req, res) -> Filter.showFilmByYear(req));
         
+        // Recurso /filter_actoractress encargado de mostrar todas las películas
+        // en las que participa un actor o una actriz.
+        post("/filter_actoractress", (req, res) -> Filter.showFilmByActorActress(req));
+
+        // Recurso /filter_duration encargado de mostrar todas las películas con una 
+        //duración menor a la dada
+        post("/filter_duration", (req, res) -> Filter.showFilmByDuration(req));
+
+        // Recurso /filter_genre encargado de mostrar todas las películas dado un genero.
+        post("/filter_genre", (req, res) -> Filter.showFilmByGenre(req));
+
+        // Recurso /filter_rating encargado de mostrar todas las películas dado un año.
+        post("/filter_rating", (req, res) -> Filter.showFilmByRating(req));
+
+
         get("/distance", (req, res) -> {
         	String form = 
         		"<h3>Calculador de distancias mediante grafos</h3> " +
@@ -458,8 +551,8 @@ public class Main {
     			  "<li>Actor --> (1):'Nombre1 Apellido1' | (2): 'Nombre2 Apellido2'" +
     			  "<br>Ejemplo: 'Leonardo DiCaprio'</li>" +
     			"</ul>" +
-        		"*Nota* Si no se sabe el nombre exacto, poner una palabra (p.e. 'Travolta' " +
-    			"u 'Odyssey' en este caso). Se ofreceran las coincidencias de esa palabra (en progreso).";
+        		"<p>*Nota* Si no se sabe el nombre exacto, poner una palabra (p.e. 'Leonardo' " +
+    			"o 'Great' en este caso). Se ofreceran las coincidencias de esa palabra.</p>";
     		return form;
         });
         
@@ -486,6 +579,59 @@ public class Main {
         	//Tobey Maguire | The Great Gatsby / Spiderman --> actor que relaciona
         	//Willem Dafoe (Spiderman) --> NAME 2
         	//Distancia 4
+        });
+        
+        get("/graph_info", (req, res) -> {
+        	Graph graph = new Graph("Database/film_actors.txt", "/"); //podemos poner como global?
+        	String nodos = String.format("%d", graph.V());
+        	String edges = String.format("%d", graph.E());
+        	String maxDegree = String.format("%d", SmallWorld.maxDegree(graph));
+        	String averageDegree = String.format("%.3f", SmallWorld.averageDegree(graph));
+//        	String length = String.format("%d", SmallWorld.pathLength(graph, "King Kong"));
+        	
+        	
+        	String result = "<p>Información sobre nuestro grafo:</p>" + 
+        			"<ul>" + 
+        			"<li>Número de nodos (vértices) = " + nodos + "</li>" +
+        			"<li>Número de enlaces (edges) = " + edges + "</li>" +
+        			"<li>Grado máximo (nodo con más vecinos) = " + maxDegree + "</li>" +
+        			"<li>Grado medio = " + averageDegree + "</li>" +
+//        			"<li>Longitud máxima dada un actor o película (long max del subgrafo): " +
+//        				"<br>Ejemplo usado: 'King Kong' --> MaxLength = " + length + "</li>" +
+        			"</ul>";
+        	return result;
+        });
+        
+
+        get("/graph_filter", (req, res) -> {
+        	String form =
+        	"<h3>Filtrado mediante grafos</h3> " +
+        	"<p>Proporcione nombre de película o actor. Se obtendrán actores que han " + 
+        	"trabajado en esa película, o películas en las que ha trabajado ese actor:</p>" +
+    		"<form action='/graph_filter_show' method='post'>" +
+				"<div>" + 
+					"<label for='name'>Nombre del actor o película: </label>" +
+					"<input type='text' name='name'/>" +
+					"<button type='submit'>Enviar</button>" +
+				"</div>" +
+			"</form>" +
+        	"<p>*Nota* Si no se sabe el nombre exacto, poner una palabra (p.e. 'Mark' " +
+			"o 'Batman'). Se ofreceran las coincidencias de esa palabra.</p>";
+        	return form; 
+        	//USAR DESPLEGABLE PARA ELEGIR PELI O ACTOR
+        });
+        
+        post("/graph_filter_show", (req, res) -> {
+        	Graph graph = new Graph("Database/film_actors.txt", "/");
+    		String name= req.queryParams("name");
+    		String result = doGraphFilter(graph, name);
+    		
+        	return "<p>Has buscado los vecinos de: '" + name + ".</p>" +
+        			"<p>RESULTADO:</p>" +
+        			"<ul>" + 
+        			result + 
+        			"</ul>" +
+        			"<br><a href='/'>Volver</a>";
         });
     }
 }
