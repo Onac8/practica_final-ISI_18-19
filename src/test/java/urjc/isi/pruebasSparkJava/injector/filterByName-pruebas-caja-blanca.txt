@@ -1,0 +1,60 @@
+Paso 1: elegir el criterio de cobertura de grafos.
+    - En este caso, elegimos Prime Path Coverage (PPC) por ser un criterio
+      simple y elegante que subsume a la mayoría (excepto Complete Path
+      Coverage (CPC) y Edge-Pair Coverage (EPC)).
+
+Paso 2: elegir los requisitos de tests (RTs):
+    - A = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    - B = [1, 2, 4, 5, 6, 15]
+    - C = [1, 2, 3, 15]
+    - D = [1, 2, 4, 3, 15]
+    - E = [1, 2, 4, 5, 3, 15]
+    - F = [1, 2, 4, 5, 6, 3, 15]
+    - G = [1, 2, 4, 5, 6, 7, 3, 15]
+    - H = [1, 2, 4, 5, 6, 7, 8, 3, 15]
+    - I = [1, 2, 4, 5, 6, 7, 8, 9, 3, 15]
+    - J = [1, 2, 4, 5, 6, 7, 8, 9, 10, 3, 15]
+    - K = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 3, 15]
+    - L = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 3, 15]
+    - M = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 3, 15]
+
+Paso 3: diseñar caminos de prueba (CPs) que satisfagan esos RTs:
+    - i     = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]  =>  Test 1: A1 = T => el nombre de la película está en la BD.
+        · RTs recorridos: A
+
+    - ii    = [1, 2, 4, 5, 6, 15]                               =>  Test 2: A2 = F => el nombre de la película no está en la BD.
+        · RTs recorridos: B
+
+    - iii   = [1, 2, 3, 15]                                     =>  No se puede testar.
+        · RTs recorridos: C
+
+    - iv    = [1, 2, 4, 3, 15]                                  =>  No se puede testar.
+        · RTs recorridos: D
+
+    - v     = [1, 2, 4, 5, 3, 15]                               =>  No se puede testar.
+        · RTs recorridos: E
+
+    - vi    = [1, 2, 4, 5, 6, 3, 15]                            =>  No se puede testar.
+        · RTs recorridos: F
+
+    - vii   = [1, 2, 4, 5, 6, 7, 3, 15]                         =>  No se puede testar.
+        · RTs recorridos: G
+
+    - viii  = [1, 2, 4, 5, 6, 7, 8, 3, 15]                      =>  No se puede testar.
+        · RTs recorridos: H
+
+    - ix    = [1, 2, 4, 5, 6, 7, 8, 9, 3, 15]                   =>  No se puede testar.
+        · RTs recorridos: I
+
+    - x     = [1, 2, 4, 5, 6, 7, 8, 9, 10, 3, 15]               =>  No se puede testar.
+        · RTs recorridos: J
+
+    - xi    = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 3, 15]           =>  No se puede testar.
+        · RTs recorridos: K
+
+    - xii   = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 3, 15]       =>  No se puede testar.
+        · RTs recorridos: L
+
+    - xiii  = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 3, 15]   =>  No se puede testar.
+        · RTs recorridos: M
+

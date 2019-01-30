@@ -1,0 +1,39 @@
+Paso 1: elegir el criterio de cobertura de grafos.
+    - En este caso, elegimos Prime Path Coverage (PPC) por ser un criterio
+      simple y elegante que subsume a la mayoría (excepto Complete Path
+      Coverage (CPC) y Edge-Pair Coverage (EPC)).
+
+Paso 2: elegir los requisitos de tests (RTs):
+    - A = [1, 2, 4, 5, 6, 7, 8]
+    - B = [6, 7, 8, 6]
+    - C = [7, 8, 6, 7]
+    - D = [8, 6, 7, 8]
+    - E = [1, 2, 4, 5, 6, 9]
+    - F = [1, 2, 3, 9]
+    - G = [1, 2, 4, 3, 9]
+    - H = [1, 2, 4, 5, 3, 9]
+    - I = [1, 2, 4, 5, 6, 3, 9]
+    - J = [1, 2, 4, 5, 6, 7, 3, 9]
+
+Paso 3: diseñar caminos de prueba (CPs) que satisfagan esos RTs:
+    - i     = [1, 2, 4, 5, 6, 7, 8, 6, 7, 8, 6, 9]      =>  Test 1: A1 = T => hay películas de ese año en la BD.
+        · RTs recorridos: A, B, C, D
+
+    - ii    = [1, 2, 4, 5, 6, 9]                        =>  Test 2: A2 = F => no hay películas de ese año en la BD.
+        · RTs recorridos: E
+
+    - iii   = [1, 2, 3, 9]                              =>  No se puede testar.
+        · RTs recorridos: F
+
+    - iv    = [1, 2, 4, 3, 9]                           =>  No se puede testar.
+        · RTs recorridos: G
+
+    - v     = [1, 2, 4, 5, 3, 9]                        =>  No se puede testar.
+        · RTs recorridos: H
+
+    - vi    = [1, 2, 4, 5, 6, 3, 9]                     =>  No se puede testar.
+        · RTs recorridos: I
+
+    - vii   = [1, 2, 4, 5, 6, 7, 3, 9]                  =>  No se puede testar.
+        · RTs recorridos: J
+

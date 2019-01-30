@@ -1,0 +1,53 @@
+-- DESCRIPCIÓN DE LOS TESTS DE CAJA BLANCA DE COMMENTS.JAVA --
+
+GRAFO 1: newComment
+	Tenemos tres posibles caminos a seguir
+	Path 1: 1-2-3 : text == null => Comentario invalido
+	Path 2: 1-2-4-5: user < 0 => Usuario invalido
+	Path 3: 1-2-4-6-7: film == null => Pelicula invalida
+	Path 4: 1-2-4-6-8: texto no nulo, user no nulo, película no nula 
+				=> return Comentario Almacenado
+
+GRAFO 2: commentsFilm
+	En este caso los caminos a seguir son:
+	Path 1: 1-2-3: film < 0 => Pelicula invalida
+	Path 2: 1-2-4-5-7: película no nula, comments vacíos
+	Path 3: 1-2-4-5-7: película no nula, muchos comentarios
+
+GRAFO 3: commentToString
+	En este grafo distinguimos los siguientes caminos:
+	Path 1: 1-2-3: matrix_coment == null => no tiene comentarios
+	Path 2: 1-2-4-6: matrix_coment.length == 0
+	Path 3: 1-2-4-5-4-6: matrix_coment.length > 0
+
+GRAFO 4: postComment
+	Por último, en el grafo de postComment se puede observar que este
+	método tan solo tiene un camino, de manera que no sería necesario
+	definir más que un test
+	Path 1: 1-2-3-4: devuelve el comentario almacenado
+
+A continuación debemos definir los tests adecuados.
+
+GRAFO 1: Todos los tests definidos por los paths 1, 2, 3 y 4 del
+	grafo 1 se encuentran ya definidos por los tests de caja negra
+	Test 1: text == null => newComment(null, 4, "Titanic")
+	Test 2: User < 0 => newComment("comentario", -1, "Titanic")
+	Test 3: film == null => newComment("comentario", 4, null)
+	Test 4 (happy path): newComment("comentario", 4, "Titanic")
+
+GRAFO 2
+	Test 1: commentsFilm(-1, I)
+	Test 2: commentsFilm(24, I), donde la película 24 no tiene ningún
+	comentario almacenado 
+	Test 3: commentsFilm(102, I), donde la película 102 tiene varios
+	comentarios almacenados
+
+GRAFO 3
+	Test 1: matrix_coment == null => commentToString(null)
+	Test 2: commentToString({})
+	Test 3: commentToString({"comentario 1", "comentario 2"})
+
+GRAFO 4
+	Test 1: happy path: postComment(request, I)
+
+	

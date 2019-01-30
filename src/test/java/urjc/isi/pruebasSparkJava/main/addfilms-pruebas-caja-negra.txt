@@ -1,0 +1,84 @@
+-- DOCUMENTO EXPLICATIVO DE LAS PRUEBAS CAJA NEGRA NECESARIAS DE FUNCIONES PARA AÑADIR PELÍCULAS --
+
+*A todos se le pasa el parámetro Connection conn que enlaza con la base de datos: "jdbc:sqlite:Database/IMDb.db"
+
+-Main.insertFilm()
+-------------------
+Paso 1: determinar el método a testar.
+	- Método insertFilm del Main.
+
+Paso 2: determinar los parámetros a testar.
+	- String data1 : título de la película
+	- String data2 : año de la película
+	- String data3 : género de la película
+
+Paso 3: elegir caracterizaciones y su división en bloques.
+	- String data1 (título) entrada es null (true, false)
+	- String data2 (año) entrada es null (true, false)
+	- String data3 (género) entrada es null (true, false)
+	(restricciones para la entrada de año válido ya incluidas en el formulario html = imposible introducir formato inválido)
+
+Paso 4: aplicar criterios de cobertura.
+	A1: Entrada con valor de título, año y género válidos. --> ok
+	A2: Entrada con título y año válidos y género a null. --> ok
+	A3: Entrada con título o año a null (género indiferente) --> excepción controlada
+
+Paso 5: traducir las combinaciones elegidas en valores que pasar a los tests.
+	T1: (connection, "Kill Bill: Volumen 3", "2020", "Accion")
+	T2: (connection, "Interstellar 2", "2022", null)
+	T3: (connection, null, "2019", null)
+	
+
+-Main.insertActor()
+-------------------
+Paso 1: determinar el método a testar.
+	- Método insertActor del Main.
+
+Paso 2: determinar los parámetros a testar.
+	- String data1 : nombre de actor que participa
+
+Paso 3: elegir caracterizaciones y su división en bloques.
+	
+
+Paso 4: aplicar criterios de cobertura.
+
+
+Paso 5: traducir las combinaciones elegidas en valores que pasar a los tests.
+	
+
+-Main.insertWorks_In()
+----------------------
+Paso 1: determinar el método a testar.
+	- Método insertWorks_In del Main.
+
+Paso 2: determinar los parámetros a testar.
+	- String data1 : título de la película
+	- String data2 : nombre del actor que participa
+
+Paso 3: elegir caracterizaciones y su división en bloques.
+	
+
+Paso 4: aplicar criterios de cobertura.
+	
+
+Paso 5: traducir las combinaciones elegidas en valores que pasar a los tests.
+	
+
+-Main.insert()
+--------------
+Paso 1: determinar el método a testar.
+	- Método insert del Main.
+
+Paso 2: determinar los parámetros a testar.
+	- String film : título de la película
+	- String actor : actor que participa en la película
+
+Paso 3: elegir caracterizaciones y su división en bloques.
+	
+
+Paso 4: aplicar criterios de cobertura.
+	
+
+Paso 5: traducir las combinaciones elegidas en valores que pasar a los tests.
+	
+

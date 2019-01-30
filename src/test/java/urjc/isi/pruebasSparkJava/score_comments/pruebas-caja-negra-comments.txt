@@ -1,0 +1,88 @@
+ -- DESCRIPCIÓN DE LAS PRUEBAS DE CAJA NEGRA DE LA CLASE COMMENT --
+
+1. Identificar los métodos a testar
+	Método 1: newComment (String text, int user, String film, Injector I)
+	Método 2: commentsFilm (int film, Injector I)
+	Método 3: commentToString (String matrix_coment[][])
+	Método 4: postComment (Request request, Injector I)
+
+2. Determinar los parámetros a testar
+	Método 1: 
+		1: texto del comentario (String)
+		2: número de usuario (int)
+		3: nombre de película (String)
+		4: injector a la base de datos (Injector): no es necesario testarlo ya que
+			asumimos que siempre nos van a pasar el injector adecuado, si no, habría 
+			fallado más arriba
+	Método 2:
+		1: id de la película (int)
+		2: injector a la base de datos (Injector): al igual que con el injector anterior
+			consideramos que no es necesario probarlo ya que siempre se nos pasa el 
+			injector adecuado
+	Método 3: 
+		1: conjunto de comentarios en una película (String)
+	Método 4: 
+		1: request de html recibido (Request)
+		2: injector a la base de datos (Injector): lo mismo que las otras dos veces, no 
+			es necesario que lo probemos
+
+3. Elegir caracterizaciones y división en bloques
+
+	Método 1:
+		C1: texto del comentario no nulo => T/F => A1/A2
+		C2: número de usuario válido (positivo) => T/F => B1/B2
+		C3: nombre de película no nulo => T/F => C1/C2
+
+	Método 2:
+		C1: id de la película válido (positivo) => T/F => A1/A2
+
+	Método 3: 
+		C1: conjunto de comentarios en una película no nulo => T/F => A1/A2
+
+	Método 4:
+		C1: Request no válido => T/F => A1/A2
+
+4. Aplicar criterios de cobertura.
+
+	Método 1: teniendo en cuenta que si cualquiera de las tres caracterizaciones es falsa, 
+	no es necesario probar si el resto son o no verdaderas, nos es suficiente con 4 tests 
+	(que cada una sea falsa + happy path)
+		Test 1: texto del comentario nulo (FXX => A2XX)
+		Test 2: número de usuario no válido (negativo) (XFX => XB2X)
+		Test 3: nombre de película nulo (XXF => XXC2)
+		Test 4: happy path, ninguna entrada inválida (TTT => A1B1C1)
+
+	Método 2: en este caso, solo tenemos una caracterización, por lo que probaremos todos los 
+	posibles outcomes
+		Test 1: id de película negativo (F => A2)
+		Test 2: happy path, id de película válido (T => A1)
+
+	Método 3: en este caso, al igual que en el anterior, al tener una sola caracterización, 
+	probamos todas las posibilidades
+		Test 1: conjunto de comentarios nulo (F => A2)
+		Test 2: happy path, conjunto de comentarios no nulo (T => A1)
+
+	Método 4: al igual que en el caso anterior, tenemos tan solo una caracterización, de manera que
+		Test 1: request no válido (F => A2)
+		Test 2: happy path, request válido (T => A1)
+
+5. Traducir las combinaciones a valores que pasar a los tests en cuestión
+
+	Método 1: 
+		Test 1: (null, 4, "Titanic", I)
+		Test 2: ("comentario", -1, "Titanic", I)
+		Test 3: ("comentario", 4, null, I)
+		Test 4: ("comentario", 4, "Titanic", I)
+
+	Método 2:
+		Test 1: (-1, I)
+		Test 2: (23, I)
+
+	Método 3:
+		Test 1: (null)
+		Test 2: (["comentario 1", "comentario 2"])
+
+	Método 4:
+		Nos encontramos con un problema a la hora de traducir la teoría a la práctica en este caso,
+		ya que no sabemos cómo mockear un request de manera que podamos controlar si es o no válido.
+

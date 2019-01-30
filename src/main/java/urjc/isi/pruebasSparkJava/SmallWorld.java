@@ -57,11 +57,48 @@ public class SmallWorld {
     public static int maxDegree(Graph G) {
         int max = 0;
         for (String v : G.vertices()) {
-            if (G.degree(v) > max)
-                max = G.degree(v);
+            if (G.degree(v) > max) max = G.degree(v);
         }
         return max;
     }
+    
+    // return string of maximum degree of any vertex
+    public static String maxDegreeName(Graph G) {
+        int max = 0;
+        String nodo = new String("");
+        for (String v : G.vertices()) {
+            if (G.degree(v) > max) {
+                max = G.degree(v);
+            	nodo = v;
+            }
+        }
+        return nodo;
+    }
+    
+    // return min degree of any vertex (more than one vertex, possibly)
+    public static int minDegree(Graph G) {
+        int min = 3;
+        for (String v : G.vertices()) {
+            if (G.degree(v) <= min)
+                min = G.degree(v);
+        }
+        return min;
+    }
+    
+ // return string of minimum degree of any vertex
+    public static String minDegreeName(Graph G) {
+        int min = 3;
+        String nodo = "";
+        for (String v : G.vertices()) {
+            if (G.degree(v) <= min)
+                min = G.degree(v);
+            	nodo = v;
+            	
+        }
+        return nodo;
+    }
+    
+
 
     public static void main(String[] args) {
         String filename  = args[0];

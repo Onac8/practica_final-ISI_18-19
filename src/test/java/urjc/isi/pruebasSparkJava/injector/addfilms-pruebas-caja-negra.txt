@@ -1,0 +1,108 @@
+-- DOCUMENTO EXPLICATIVO DE LAS PRUEBAS CAJA NEGRA NECESARIAS DE FUNCIONES PARA AÑADIR PELÍCULAS --
+
+
+-Injector.insertFilm()
+-------------------
+Paso 1: determinar el método a testar.
+	- Método insertFilm de Injector.
+
+Paso 2: determinar los parámetros a testar.
+	- String data1 : título de la película
+	- String data2 : año de la película
+	- String data3 : género de la película
+
+Paso 3: elegir caracterizaciones y su división en bloques.
+	- String data1 (título) entrada es null (true, false)
+	- String data2 (año) entrada es null (true, false)
+	- String data3 (género) entrada es null (true, false)
+	(restricciones para la entrada de año válido ya incluidas en el formulario html = imposible introducir formato inválido)
+
+Paso 4: aplicar criterios de cobertura.
+	A1: Entrada con valor de título, año y género válidos. --> ok
+	A2: Entrada con título y año válidos y género a null. --> ok
+	A3: Entrada con título o año a null (género indiferente) --> excepción controlada
+
+Paso 5: traducir las combinaciones elegidas en valores que pasar a los tests.
+	T1: ("Kill Bill: Volumen 3", "2020", "Accion")
+	T2: ("Interstellar 2", "2022", null)
+	T3: (null, "2019", null)
+	
+
+-Injector.insertActor()
+-------------------
+Paso 1: determinar el método a testar.
+	- Método insertActor de Injector.
+
+Paso 2: determinar los parámetros a testar.
+	- String data1 : nombre de actor que participa
+
+Paso 3: elegir caracterizaciones y su división en bloques.
+	- String data1 (nombre de actor) a null (true, false).
+
+Paso 4: aplicar criterios de cobertura.
+	A1: Entrada con nombre de actor válido --> ok
+	A2: Entrada con nombre de actor a null --> excepción controlada
+
+Paso 5: traducir las combinaciones elegidas en valores que pasar a los tests.
+	T1: ("Margot Robbie")
+	T2: (null)
+
+-Injector.insertWorks_In()
+----------------------
+Paso 1: determinar el método a testar.
+	- Método insertWorks_In de Injector.
+
+Paso 2: determinar los parámetros a testar.
+	- String data1 : título de la película
+	- String data2 : nombre del actor que participa
+
+Paso 3: elegir caracterizaciones y su división en bloques.
+	- String data1 (título) entrada es null (true, false)
+	- String data2 (nombre de actor) entrada es null (true, false)
+
+Paso 4: aplicar criterios de cobertura.
+	A1: Entrada con nombre de actor y título película válidos --> ok
+	A2: Entrada con nombre de actor y/o título de película a null --> excepción controlada
+
+Paso 5: traducir las combinaciones elegidas en valores que pasar a los tests.
+	T1: ("Suicide Squad", "Margot Robbie")
+	T2: (null, null)
+
+-Injector.searchTitleId()
+-------------------------
+Paso 1: determinar el método a testar.
+	- Método searchTitleId de Injector.
+
+Paso 2: determinar los parámetros a testar.
+	- Integer titleID : identificador de película.
+
+Paso 3: elegir caracterizaciones y su división en bloques.
+	- titleID presente en base de datos o no (True, False)
+
+Paso 4: aplicar criterios de cobertura.
+	A1: Entrada (titleID) está presente en la BD --> return True
+	A2: Entrada (titleID) no está presente en la BD --> return False
+
+Paso 5: traducir las combinaciones elegidas en valores que pasar a los tests.
+	T1: (27977) --> sí está (es la película "Tiempos Modernos")
+	T2: (26000) --> id sin asignar a ninguna entrada de la BD.
+
+-Injector.searchNameId()
+-------------------------
+Paso 1: determinar el método a testar.
+	- Método searchNameId de Injector.
+
+Paso 2: determinar los parámetros a testar.
+	- Integer NameID : identificador de un trabajador (worker).
+
+Paso 3: elegir caracterizaciones y su división en bloques.
+	- nameid presente en base de datos o no (True, False)
+
+Paso 4: aplicar criterios de cobertura.
+	A1: Entrada (nameid) está presente en la BD --> return True
+	A2: Entrada (nameid) no está presente en la BD --> return False
+
+Paso 5: traducir las combinaciones elegidas en valores que pasar a los tests.
+	T1: (1410815) --> sí está (es el director "Asghar Farhadi")
+	T2: (5580392) --> id sin asignar a ninguna entrada de la BD.
+

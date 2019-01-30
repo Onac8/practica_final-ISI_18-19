@@ -1,0 +1,39 @@
+
+1. El Software Under Test (SUT):
+
+        Método: predictOneMovie(int movieKey, Map<Integer, Double> user_movies);
+
+2. Parámetros:
+	
+	[ int movieKey ]
+	[ Map<Integer, Double> user_movies ]
+
+3. Caracterización:
+
+	C1.1: int válido / no válido
+	C1.2: int no cero / cero
+	C1.3: int no negativo / negativo
+	C1.4: movieKey existente / no existente
+
+	C2.1: lista de películas no vacía / vacía
+	C2.2: Integer1 no null / null
+	C2.3: Integer2 no null / null
+	C2.4: Double no null /  null
+	C2.5: Integer no inválido / inválido
+	C2.6: Double no inválido / inválido
+
+
+4. Requisitos:
+
+        En este caso al tratarse de muchas caracterizaciones, vamos a utilizar el método de Each Choice Coverage (ECC), escogiendo un valor interesante de cada bloque de cada caracterización para que aparezca por lo menos una vez.
+
+	TTTT TTTTTT             2 | <2<2, 5.5>>  
+	TTTF TTTTTT            -5 | <>
+	FTTF TTTTTT   50147483647 | <>
+	TTTT FTTTTT               | <empty>
+	TTTT TFTTTT		  | <null, <Integer, Double>>
+	TTTT TTFTTT		  | <Integer, <null, Double>>
+	TTTT FTTFTT		  | <Integer, <Integer, Double>>
+	TTTT TTFFTT		  | <Integer, <null, null>>
+	TTTT TTTTFT		  | <>
+	TTTT TTTTTF		  | <>

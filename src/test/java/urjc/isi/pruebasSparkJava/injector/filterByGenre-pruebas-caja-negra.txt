@@ -1,0 +1,24 @@
+Paso 1: determinar el método a testar.
+	- Método filterByGenre de la clase Injector.
+
+Paso 2: determinar los parámetros a testar:
+	- String genre: genero de las películas que se desean buscar en la BD.
+
+Paso 3: elegir caracterizaciones y su división en bloques.
+	- En este caso, vamos a modelar el dominio de la entrada basándonos en la
+	  funcionalidad.
+		C1: La longitud del ArrayList es mayor que la que esperamos => T / F	=> A: A1/A2
+		Esto es así porque puede ser que el ArrayList se vea incrementado debido a que se pueden añadir
+		películas pero no se puede ver decrementado ya que no se pueden eliminar. comparando las longitudes,
+		nos aseguranos que al menos cumple que el tamaño es mayor que el esperado.
+
+Paso 4: aplicar criterios de cobertura.
+	- En este caso, como solo tenemos una caracterización, los criterios All
+	  Combinations Coverage (ACoC), Each Choice Coverage (ECC) y Base Choice
+	  Coverage (BCC) son equivalentes. Así que vamos a aplicarlos.
+		Test 1: A1 = T => El tamaño es mayor al esperado
+		Test 2: A2 = F => no hay películas con ese genero en la BD.
+
+Paso 5: traducir las combinaciones elegidas en valores que pasar a los tests.
+	- Test 1 => Drama(por ejemplo)
+	- Test 2 => Fútbol (por ejemplo)

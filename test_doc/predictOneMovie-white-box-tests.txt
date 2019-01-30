@@ -1,0 +1,27 @@
+1. Vamos a utilizar el criterio de cobertura de grafos PPC (Prime Path Coverage) ya que es lo suficientemente simple y completo para nuestros tests.
+
+2. 
+::RT::
+
+A   3 4 3
+B   4 3 4
+C   3 4 5 3
+D   4 5 3 4
+E   4 5 3 6
+F   5 3 4 5
+G   1 2 3 4 5
+H   1 2 3 6
+
+
+3. 
+
+::CP::
+
+1 2 3 4 3 4 5 3 4 5 3 6
+Contiene: A,B,C,D,E,F
+
+1 2 3 4 5
+Contiene: G
+
+1 2 3 6
+Contiene: H

@@ -1,67 +1,71 @@
 package urjc.isi.pruebasSparkJava;
 
-import java.net.URISyntaxException;
+import java.util.List;
 
 import spark.Request;
-import spark.Response;
 
 public class Score {
-	//Puntuaciones
 	
-		//Guardo la nueva puntuacion
-		public String newScore(int score, int user, String film) {
-			if (score<0 || score>10) {
-				throw new IllegalArgumentException("Puntuacion invalida");
-			}else if (user<0) {
-				throw new IllegalArgumentException("Usuario invalido");
-			}else if (film.equals(null)) {
-				throw new IllegalArgumentException("Pelicula invalida");
-			}else {
-			// Creo la clase bbdd
-			//Obtener el id de la pelicula
-			//bbdd.filterByName(film); si nos hace falta sacar el id
-			//Llamar a la funcion para añadir. 
-			return ("Puntuacion añadida");
-			}
-		}
-		
-		//Obtengo la nueva media 
-		public int getScor (String film) {
-			if (film.equals(null)) {
-				throw new IllegalArgumentException("Pelicula invalida");
-			}else {
-			//Llamara a una funcion que me devuelva todas las puntuaciones 
-			//referentes al nombre que me pasan, de ese vector saco la medi
-			int media = 4;
+	//Guardo la nueva puntuacion    COMPLETO!!!
+	public String newScore(int score, int user, int id_film, Injector I) {
+		if (score<0 ||score>10) {
+			return("Puntuacion invalida");
+		}else if (user<0) {
+			return("Usuario invalido");
+		}else if (id_film<0) {
+			return("Pelicula invalida");
+		}else {			
+			I.insertUser(user);
+    		System.out.println(user);
+    		System.out.println(score);
+
+			I.insertRating(id_film, user, score);
+		}			
+		return ("Puntuacion añadida");
+	}
+	
+	//Obtengo la nueva media    COMPLETO!!!		
+	public float getMeanScore(int id_film, Injector I) {
+			float media = I.meanScores(id_film);
 			return media;
-			}
-		}
-		
-		//Actualizo la media
-		public void changeScore(int score, String film) {
-			if (score<0 || score>10) {
-				throw new IllegalArgumentException("Puntuacion invalida");
-			}else if (film.equals(null)) {
-				throw new IllegalArgumentException("Pelicula invalida");
-			}else {
-			//Llamar a la función para cambiar la puntuacion de la pelicula, pedir. 
-				
-			}
-		}
-		
-		public String postScore(Request request) throws ClassNotFoundException, URISyntaxException {
-			System.out.println("Puntuando");
-			String result = new String("Puntuacion");			
-			String score_string=request.queryParams("score");
-			int score=Integer.parseInt(score_string);
-			String user_string=request.queryParams("user");
-			int user=Integer.parseInt(user_string);
-			String film=request.queryParams("film");
-			result=newScore(score, user, film);
-			score=getScor(film);
-			changeScore(score, film);
-			return result;
 		}
 		
 
+		//Actualizo la media COMPLETO!!!
+	public void changeScore(float score, int  id_film,Injector I) { //injector {
+			I.updateAverageRating(id_film, score);
+    		System.out.println(score);
+    		System.out.println(id_film);
+		}
+		
+	
+
+	public String postScore(Request request, Injector I, SlopeOneFilter sof) {
+			
+			//Saco la puntuacion a int
+			String score_string=request.queryParams("score");
+			//Saco el usuario a int
+			String user_string=request.queryParams("user");
+			//Saco la pelicula.
+			String film=request.queryParams("film");
+			
+			List<String> info_film=I.filterByName(film);
+			
+			int id_film=Integer.parseInt(info_film.get(6));
+			int user=Integer.parseInt(user_string);
+			int score=Integer.parseInt(score_string);
+		
+		//Linea  de código para actualizar el map data de SlopeOneFilter
+		sof.updateData(score,user,id_film);
+		
+		try {
+			String result=newScore(score, user, id_film, I);
+			float mean=getMeanScore(id_film, I);
+    		System.out.println(mean);
+			changeScore(mean, id_film, I);
+			return result;
+		}catch(IllegalArgumentException e) {
+			return e.getMessage();
+		}
+	}
 }

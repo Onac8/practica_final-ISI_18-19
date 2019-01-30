@@ -1,0 +1,75 @@
+ -- DESCRIPCIÓN DE LAS PRUEBAS DE CAJA NEGRA DE LA CLASE COMMENT --
+
+1. Identificar los métodos a testar
+	Método 1: newScore(int score, int user, String film, Injector I) 
+	Método 2: getMeanScore(String film, Injector I)
+	Método 3: changeScore(float score, String film, Injector I)
+	Método 4: postScore(Request request, Injector I, SlopeOneFilter sof)
+
+2. Determinar los parámetros a testar
+	Método 1: 
+		1: número de puntuación (int)
+		2: número de usuario (int)
+		3: nombre de película (String)
+		4: injector a la base de datos (Injector)
+	Método 2:
+		1: nombre de la película (String)
+		2: injector a la base de datos (Injector)
+	Método 3: 
+		1: número de puntuación (float)
+		2: nombre de película (String)
+		3: injector a la base de datos (Injector)
+	Método 4: 
+		1: Request (request)
+		2: injector a la base de datos (Injector)
+		3: SlopeOneFilter (sof)
+
+3. Elegir caracterizaciones y división en bloques
+
+	Método 1:
+		C1: Puntuación no negativa ni mayor que cero => T/F => A1/A2
+		C2: número de usuario válido (positivo) => T/F => B1/B2
+		C3: nombre de película no nulo => T/F => C1/C2
+	Método 2:
+		C1: nombre de película no nulo => T/F => A1/A2
+		C2: injector válido => T/F => B1/B2
+	Método 3: 
+		C1: Puntuación no negativa ni mayor que cero => T/F => A1/A2
+		C2: nombre de película no nulo => T/F => B1/B2
+	Método 4:
+		C1: Request válido => T/F => A1/A2
+
+4. Aplicar criterios de cobertura.
+
+	Método 1: Hacemos tres test distintos debido a que con esa cobertura comtemplaríamos todos los casos posibles
+		Test 1: texto del comentario nulo (FXXX => A2XXX)
+		Test 2: número de usuario no válido (negativo) (XFXX => XB2XX)
+		Test 3: nombre de película nulo (XXFX => XXC2X)
+
+	Método 2: 
+		Test 1: nombre de película nulo (FX => A2X)
+		Damos por hecho que en el injector no se producen errores, por ello no lo contemplamos.
+
+	Método 3: 
+		Test 1: Hacemos un test comprobando la función getScore de la película introducida.
+
+	Método 4: 
+		Test 1: Comprobamos que la media cambia para un valor introducido (por ejemplo 1) mediante la funcion changeScore y después restablecemos la media original de la película.
+
+5. Traducir las combinaciones a valores que pasar a los tests en cuestión
+
+	Método 1: 
+		Test 1: (-1,1,"Titanic",I)
+		Test 2: (1,-1,"Titanic",I)
+		Test 3: (1,1,null,I)
+
+	Método 2:
+		Test 1: ("Titanic",I)
+
+	Método 3:
+		Test 1: ("Titanic",I)
+
+	Método 4:
+		Test 1: (1.0f,"Titanic",I)
+
+		

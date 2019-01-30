@@ -1,0 +1,22 @@
+Paso 1: determinar el método a testar.
+	- Método filterByActorActress de la clase Injector.
+
+Paso 2: determinar los parámetros a testar:
+	- String name: nombre del actor/actriz que participa en la película que se
+	  desea buscar en la BD.
+
+Paso 3: elegir caracterizaciones y su división en bloques.
+	- En este caso, vamos a modelar el dominio de la entrada basándonos en la
+	  funcionalidad.
+	 	C1: hay películas con ese/a actor/actriz en la BD => T / F	=> A: A1/A2
+
+Paso 4: aplicar criterios de cobertura.
+	- En este caso, como solo tenemos una caracterización, los criterios All
+	  Combinations Coverage (ACoC), Each Choice Coverage (ECC) y Base Choice
+	  Coverage (BCC) son equivalentes. Así que vamos a aplicarlos.
+		Test 1: A1 = T => hay películas con ese/a actor/actriz en la BD.
+		Test 2: A2 = F => no hay películas con ese/a actor/actriz en la BD.
+
+Paso 5: traducir las combinaciones elegidas en valores que pasar a los tests.
+	- Test 1 => "Jennifer Lawrence" (por ejemplo)
+	- Test 2 => "Lady Gaga" (por ejemplo)

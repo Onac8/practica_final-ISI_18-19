@@ -1,65 +1,75 @@
 package urjc.isi.pruebasSparkJava;
 
-import java.net.URISyntaxException;
+import java.util.List;
 
 import spark.Request;
-import spark.Response;
 
 public class Comment {
 	//Comentarios
 	
-	//Guardo un nuevo comentario de un usuario hacia una pelicula
-	public String postComment(Request request) throws ClassNotFoundException, URISyntaxException {
-		String result = new String("Comentario");
-		String comment=request.queryParams("comment");
-		String user_string=request.queryParams("user");
-		int user=Integer.parseInt(user_string);
-		String film=request.queryParams("film");
-		result=newComment(comment, user, film);
-		return result;
-	}
-	
-	public String newComment(String text, int user, String film) {
-		if (text.equals(null)) {
-			throw new IllegalArgumentException("Comentario invalido");
+	//COMPLETO!!!
+	public String newComment(String text, int user, String film, Injector I) {
+		if (text==null) {
+			return("Comentario invalido");
 		}else if (user<0) {
-			throw new IllegalArgumentException("Usuario invalido");
-		}else if (film.equals(null)) {
-			throw new IllegalArgumentException("Pelicula invalida");
-		}else {
+			return("Usuario invalido");
+		}else if (film==null) {
+			return("Pelicula invalida");
+		}else {			
+				I.insertUser(user);
+				List<String> info_film=I.filterByName(film);
+				int id_film=Integer.parseInt(info_film.get(6));
+				System.out.println(id_film);
+				I.insertComments(id_film, user, text);
+				return "Comentario almacenado";
+			}
 		//Obtengo id de la pelicula
 		//Almaceno el nuevo comentario
-			System.out.println("Guardado");
-			return "Comentario almacenado";
-		}
 	}
 	
-	//Devuelvo todos los comentarios que han hecho sobre una pelicula, con su usuario, para mostrar User: comment
-	public String commentsFilm(String film){
-		//Obtener el id con la función basica
-		//Una funcion que me devuelva Un array de dos por dos con la info user, comen. 
-		if (film.equals(null)) {
-			throw new IllegalArgumentException("Pelicula invalida");
-		}else {
-			String coments [][]= new String[1][1];
-			String result=commentToString(coments);
-			return result;
+	//COMPLETO!!!
+	public String commentsFilm(int film, Injector I){
+		if (film < 0){
+			return ("Pelicula invalida");
 		}
+		String text = "<u><b>Comentarios:</b></u><br>";
+		List<String> comments=I.getFilmComments(film);
+		if (comments.size()!=0) {
+			for  (String comment :comments) {
+				text=text+comment+"<br><br>";
+			}
+		}
+		return text;
+		
 	}
 	
+	//COMPLETO!!!
 	public String commentToString(String matrix_coment[][])
 	{
-		String text = "<h1>Comentarios que tiene la película:</h1>";
-		if (matrix_coment.length==0) {
-			throw new NullPointerException("No tiene comentarios");
-		}else {
-			for (int x = 0; x < matrix_coment.length; x++){
-				String br = " ";
-				text += br + matrix_coment[x][0] + ":" + matrix_coment[x][1];
-			}
-			text +=" ";
-			return text;
+		if (matrix_coment == null){
+			return "No tiene comentarios";
 		}
+		String text = "<u><b>Comentarios:</b></u><br>";
+		for (int x = 0; x < matrix_coment.length; x++){
+			String coments = " ";
+			text += coments + matrix_coment[x][0] + ":" + matrix_coment[x][1]+"<br>";
+		}
+		text +=" ";
+		return text;
 	}
-
+	
+	//COMPLETO!!!
+	public String postComment(Request request, Injector I) {
+		String comment=request.queryParams("comment");
+		System.out.println(comment);
+		
+		String user_string=request.queryParams("user");
+		int user=Integer.parseInt(user_string);
+		System.out.println(user);
+		String film=request.queryParams("film");
+		System.out.println(film);
+		String result=newComment(comment, user, film, I);
+		return result;
+	}
 }
+

@@ -1,0 +1,28 @@
+-- DESCRIPCION DE LOS TEST DE CAJA BLANCA DE SCORE.JAVA --
+
+Grafo 1: newScore
+	Tenemos varios posibles caminos a seguir:
+	
+	Path 1: 1-2-3 : score<0 || score>10 => Puntuacion invalida
+	Path 2: 1-2-4-5: user<0 => Usuario invalido
+	Path 3: 1-2-4-6-7: id_film < 0 => Pelicula invalida
+	Path 4: 1-2-4-6-8 : score > 0 && score < 10, user > 0, id_film > 0 => puntuacion añadida
+
+Grafo 2: getMeanScore
+	Path 1: 1-2-3 : I.meanScores(id_film) => media
+
+Grafo 3: changeScore
+	Path 1: 1-2-3-4 : I.updatAverage(id_film,score) => System.out.println(score) y system.out.println(id_film)
+
+Grafo 4: postScore
+	Path 1: 1-2-3-4-5-6-7-8-9-10: request.queryParams("score"), request.queryParams("user"), 
+	  request.queryParams("film"),I.filterByName(film),Integer.parseInt(info_film.get(6)),Integer.parseInt(user_string),Integer.parseInt(score_string),
+	  sof.updateData(score,user,id_film),newScore(score, user, id_film, I) => e.getMessage();
+
+	Path 2: 1-2-3-4-5-6-7-8-9-11-12: request.queryParams("score"), request.queryParams("user"), 
+	  request.queryParams("film"),I.filterByName(film),Integer.parseInt(info_film.get(6)),Integer.parseInt(user_string),Integer.parseInt(score_string),
+	  sof.updateData(score,user,id_film),newScore(score, user, id_film, I),changeScore(mean,id_film,I) => e.getMessage();
+
+	Path 3: 1-2-3-4-5-6-7-8-9-11-13: request.queryParams("score"), request.queryParams("user"), 
+	  request.queryParams("film"),I.filterByName(film),Integer.parseInt(info_film.get(6)),Integer.parseInt(user_string),Integer.parseInt(score_string),
+	  sof.updateData(score,user,id_film),newScore(score, user, id_film, I) => result
